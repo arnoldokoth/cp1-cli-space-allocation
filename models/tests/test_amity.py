@@ -1,6 +1,6 @@
 import unittest
 
-from amity.amity import Amity
+from models.amity import Amity
 
 class TestAmity(unittest.TestCase):
 
@@ -9,9 +9,6 @@ class TestAmity(unittest.TestCase):
 
     def test_is_instance_of(self):
         self.assertIsInstance(self.amity_object, Amity)
-
-    def test_is_object_of(self):
-        self.assertTrue(type(self.amity_object) is Amity)
 
     @unittest.skip("work in progress")
     def test_create_room(self):

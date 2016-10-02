@@ -1,15 +1,15 @@
 import unittest
 
-from fellow.fellow import Fellow
-from person.person import Person
+from models.fellow import Fellow
+from models.person import Person
 
 class TestFellow(unittest.TestCase):
 
     def setUp(self):
-        self.fellow_one = Fellow()
+        self.fellow_one = Fellow("Arnold", "Okoth", "Male")
 
     def test_is_subclass(self):
-        self.assertTrue(Fellow issubclass(Person))
+        self.assertTrue(issubclass(Fellow, Person))
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 import unittest
 
-from person.person import Person
+from models.person import Person
 
 class TestPerson(unittest.TestCase):
 
@@ -9,9 +9,6 @@ class TestPerson(unittest.TestCase):
 
     def test_is_instance_of(self):
         self.assertIsInstance(self.person_one, Person)
-
-    def test_is_object_of(self):
-        self.assertTrue(type(self.person_one) is Person)
 
     def test_object_property_firstname(self):
         self.assertEqual("Arnold", self.person_one.first_name)
