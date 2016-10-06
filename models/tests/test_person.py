@@ -5,7 +5,7 @@ from models.person import Person
 class TestPerson(unittest.TestCase):
 
     def setUp(self):
-        self.person_one = Person("Arnold", "Okoth", "Male")
+        self.person_one = Person("Arnold", "Okoth")
 
     def test_is_instance_of(self):
         self.assertIsInstance(self.person_one, Person)
@@ -15,9 +15,6 @@ class TestPerson(unittest.TestCase):
 
     def test_object_property_lastname(self):
         self.assertEqual("Okoth", self.person_one.last_name)
-
-    def test_object_property_sex(self):
-        self.assertEqual("Male", self.person_one.sex)
 
 
 if __name__ == '__main__':
