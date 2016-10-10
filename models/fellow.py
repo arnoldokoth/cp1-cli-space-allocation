@@ -1,7 +1,11 @@
-from person import Person
+from models.person import Person
 
 class Fellow(Person):
+
+	fellow_cache = []
 	
-	def __init__(self, first_name, last_name, sex):
-		super(Fellow, self).__init__(first_name, last_name, sex)
+	def __init__(self, first_name, last_name):
+		super(Fellow, self).__init__(first_name, last_name)
+		full_name = self.first_name + " " + self.last_name
+		Fellow.fellow_cache.append(full_name)
 

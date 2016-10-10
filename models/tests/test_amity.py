@@ -6,7 +6,6 @@ from models.amity import Amity
 class TestAmity(unittest.TestCase):
 
     def setUp(self):
-        self.amity_object = Amity()
         self.load_people_file = "test_load_people.txt"
         self.allocations_file = "test_allocated_rooms.txt"
         self.unallocated_rooms_file = "test_unallocated_rooms.txt"
@@ -27,9 +26,6 @@ class TestAmity(unittest.TestCase):
             os.remove(self.unallocated_rooms_file)
         except Exception:
             print("error deleting test files")
-
-    def test_is_instance_of(self):
-        self.assertIsInstance(self.amity_object, Amity)
 
     def test_create_room(self):
         Amity.create_room("OF", "Oculus")
@@ -52,9 +48,11 @@ class TestAmity(unittest.TestCase):
         self.assertIn("OLUWAFEMI SULE FELLOW Y", Amity.load_people(self.load_people_file))
 
     def test_print_allocations(self):
+        Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Fellow", wants_accomodation="Y")
         self.assertIn("Arnold Okoth Oculus", Amity.print_allocations(self.allocations_file))
 
     def test_print_unallocated(self):
+        Amity.create_room("LS", "Hogwarts")
         self.assertIn("Hogwarts", Amity.print_unallocated(self.unallocated_rooms_file))
 
     def test_print_room(self):
