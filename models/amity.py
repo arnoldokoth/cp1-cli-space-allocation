@@ -1,10 +1,11 @@
 import pdb
 import random
 
+from database_structure import create_database
 from models.staff import Staff
 from models.fellow import Fellow
 from models.room import Room
-
+import db_crud
 
 class Amity:
 
@@ -17,15 +18,17 @@ class Amity:
 
 
 	@staticmethod
-	def create_room(room_type, *args):
+	def create_room(room_type, *rooms_args):
 		""" Creates rooms in the application
 		"""
-		for room in args:
+		# import pdb; pdb.set_trace()
+		for room in rooms_args[0]:
 			if room_type == "OF":
 				Amity.offices.append(room)
 				current_room = Room(type="OF", name=room)
 			elif room_type == "LS":
 				Amity.living_spaces.append(room)
+				# import pdb; pdb.set_trace()
 				current_room = Room(type="LS", name=room)
 			else:
 				return "Invalid Room Type"
@@ -40,31 +43,104 @@ class Amity:
 		wants_accomodation = kwargs.get('wants_accomodation', 'N')
 		full_name = first_name.capitalize() + " " + last_name.capitalize()
 
-		# Create person of fellow
 		if person_type.upper() == "FELLOW":
 			Amity.fellows.append(full_name)
 			fellow = Fellow(first_name, last_name)
+			random_office = Amity.allocate_random_office()
+
+			if Amity.is_at_max_capacity(random_office):
+				random_office = Amity.allocate_random_office()
+			else:
+				if random_office:
+					if random_office in Amity.room_allocations.keys():
+						Amity.room_allocations[random_office].append(full_name)
+						print("Added: " + full_name + " and allocated them to: " + random_office)
+					else:
+						Amity.room_allocations[random_office] = [full_name]
+						print("Added: " + full_name + " and allocated them to: " + random_office)
+				else:
+					print("No rooms available!")
+
+				if wants_accomodation.upper() == "Y":
+					random_livingspace = Amity.allocate_random_living_space()
+
+					if Amity.is_at_max_capacity(random_livingspace):
+						random_livingspace = Amity.allocate_random_living_space()
+					else:
+						if random_livingspace:
+							if random_livingspace in Amity.room_allocations.keys():
+								Amity.room_allocations[random_livingspace].append(full_name)
+								print("Added: " + full_name + " and acllocated them to: " + random_livingspace)
+							else:
+								Amity.room_allocations[random_livingspace] = [full_name]
+								print("Added: " + full_name + " and allocated them to: " + random_livingspace)
+
+				elif wants_accomodation.upper() == "N":
+					print("Not allocated living space")
+
+			
 		elif person_type.upper() == "STAFF":
 			Amity.staff.append(full_name)
 			staff = Staff(first_name, last_name)
-		else:
-			return "Invalid Person Type"
+			random_office = Amity.allocate_random_office()
 
-		if wants_accomodation == "Y":
-			random_room = Amity.allocate_random_room(person_type)
-
-			if Amity.is_at_max_capacity(random_room):
-				random_room = Amity.allocate_random_room(person_type)
-
-			if random_room in Amity.room_allocations.keys():
-				Amity.room_allocations[random_room].append(full_name)
-				return "Added: " + full_name + " and allocated them to: " + random_room
+			if Amity.is_at_max_capacity(random_office):
+				random_office = Amity.allocate_random_office()
 			else:
-				Amity.room_allocations[random_room] = [full_name]
-				return "Added: " + full_name + " and allocated them to: " + random_room
-		elif wants_accomodation == "N":
-			return "Added: " + full_name
+				if random_office:
+					if random_office in Amity.room_allocations.keys():
+						Amity.room_allocations[random_office].append(full_name)
+						print("Added: " + full_name + " and allocated them to: " + random_office)
+					else:
+						Amity.room_allocations[random_office] = [full_name]
+						print("Added: " + full_name + " and allocated them to: " + random_office)
+				else:
+					print("No offices available!")
 
+			if wants_accomodation == "Y":
+				print("Staff cannot be allocated living spaces!")
+		else:
+			print("Invalid Person Type")
+
+	@staticmethod
+	def allocate_room(room_name, full_name):
+		pass
+
+	@staticmethod
+	def allocate_random_office():
+		all_offices = Amity.offices
+
+		if len(all_offices) > 0:
+			random_room = random.choice(all_offices)
+			return random_room
+		else:
+			return False
+
+	@staticmethod
+	def allocate_random_living_space():
+		all_living_spaces = Amity.living_spaces
+		# import pdb; pdb.set_trace()
+		if len(all_living_spaces) > 0:
+			random_room = random.choice(all_living_spaces)
+			return random_room
+		else:
+			return False
+
+	# Helper Method for allocating rooms randomly
+	@staticmethod
+	def allocate_random_room(person_type):
+		all_rooms = []
+		if person_type.upper() == "FELLOW":
+			all_rooms = Amity.offices + Amity.living_spaces
+		elif person_type.upper() == "STAFF":
+			all_rooms = Amity.offices
+
+		if len(all_rooms) > 0:
+			random_room = random.choice(all_rooms)
+			return random_room
+		else:
+			# print("No rooms have been created in Amity")
+			return False
 
 	# Helper Method to check if room is a at max capacity
 	@staticmethod
@@ -88,33 +164,65 @@ class Amity:
 					return False
 
 					
-	# Helper Method for allocating rooms randomly
-	@staticmethod
-	def allocate_random_room(person_type):
-		all_rooms = []
-		if person_type.upper() == "FELLOW":
-			all_rooms = Amity.offices + Amity.living_spaces
-		elif person_type.upper() == "STAFF":
-			all_rooms = Amity.offices
-
-		if len(all_rooms) > 0:
-			random_room = random.choice(all_rooms)
-			return random_room
-		else:
-			return "No rooms have been created in Amity"
-
+	
 
 	@staticmethod
 	def reallocate_person(full_name, room_name):
-		if room_name in Amity.room_allocations.keys():
-			pass
+		# Determine the person type
+		if room_name in Amity.offices + Amity.living_spaces:
+			if full_name in Amity.fellows:
+				# this guy is a fellow so he can be reallocated to both offices & living spaces
+				all_rooms = Amity.offices + Amity.living_spaces
+				if room_name in Amity.room_allocations.keys():
+					for room in Amity.room_allocations.keys():
+						if full_name in Amity.room_allocations[room]:
+							Amity.room_allocations[room].remove(full_name)
+					if Amity.is_at_max_capacity(room_name):
+						print("Room already full!")
+					else:
+						Amity.room_allocations[room_name].append(full_name)
+				else:
+					Amity.room_allocations[room_name] = [full_name]
+			elif full_name in Amity.staff:
+				# this guy is staff thus can only be allocated to an office
+				all_rooms = Amity.offices
+				if room_name in Amity.room_allocations.keys():
+					for room in Amity.room_allocations.keys():
+						if full_name in Amity.room_allocations[room]:
+							Amity.room_allocations[room].remove(full_name)
+					if Amity.is_at_max_capacity(room_name):
+						print("Room already full!")
+					else:
+						Amity.room_allocations[room_name].append(full_name)
+				else:
+					Amity.room_allocations[room_name] = [full_name]
 		else:
-			pass
-
+			print("Room {0} not created!".format(room_name))
+		
 
 	@staticmethod
-	def load_people(filename=""):
-		return ""
+	def load_people(filename):
+		if filename:
+			with open(filename, "r") as file:
+				lines = file.readlines()
+				for line in lines:
+					person_details = line.split()
+					if len(person_details) == 3:
+						first_name = person_details[0]
+						last_name = person_details[1]
+						person_type = person_details[2]
+						wants_accomodation = "N"
+						Amity.add_person(first_name=first_name, last_name=last_name, person_type=person_type, wants_accomodation=wants_accomodation)
+					elif len(person_details) == 4:
+						first_name = person_details[0]
+						last_name = person_details[1]
+						person_type = person_details[2]
+						wants_accomodation = person_details[3]
+						Amity.add_person(first_name=first_name, last_name=last_name, person_type=person_type, wants_accomodation=wants_accomodation)
+					else:
+						print("could not process provided data!")
+		else:
+			print("Please provide a file!")
 
 
 	# Helper Method to convert dictionary keys to a list
@@ -130,7 +238,7 @@ class Amity:
 	@staticmethod
 	def print_allocations(filename=""):
 		if filename:
-			print("writing to file...")
+			print("\nwriting to file...\n")
 			with open(filename, 'w') as file:
 				rooms = Amity.convert_keys_to_list(Amity.room_allocations.keys())
 				for room in rooms:
@@ -140,7 +248,7 @@ class Amity:
 					str_people = ", ".join(people)
 					file.write(str_people + "\n")
 		else:
-			print("printing allocations...")
+			print("\nprinting allocations...\n")
 			rooms = Amity.convert_keys_to_list(Amity.room_allocations.keys())
 			for room in rooms:
 				Amity.print_room(room)
@@ -148,68 +256,62 @@ class Amity:
 
 	@staticmethod
 	def print_unallocated(filename=""):
+		all_people = Amity.fellows + Amity.staff
+		allocated_people = []
+		for room in Amity.room_allocations.keys():
+			for person in Amity.room_allocations[room]:
+				allocated_people.append(person)
+		unallocated_people = [person for person in all_people if person not in allocated_people]
+		str_unallocated_people = ", ".join(unallocated_people)
+
 		if filename:
-			print("writing to file...")
+			print("\nwriting to file...\n")
+			with open(filename, "w") as file:
+				file.write("UNALLOCATED PEOPLE" + "\n")
+				file.write("-" * 50 + "\n")
+				file.write(str_unallocated_people + "\n")
 		else:
-			print("printing unallocated...")
-			all_people = Amity.fellows + Amity.staff
-			allocated_people = []
-			for room in Amity.room_allocations.keys():
-				allocated_people = Amity.room_allocations[room]
-			print("all people...")
-			print(all_people)
-			print()
-			print("allocated people...")
-			print(allocated_people)
+			print("printing unallocated...\n")
+			print("UNALLOCATED PEOPLE")
+			print("-" * 50)
+			print(str_unallocated_people)
 
 
 	@staticmethod
 	def print_room(*args):
-		for room_name in args:	
+		for room_name in args:
+			room_type = ""
+			if room_name in Amity.offices:
+				room_type = "Office"
+			elif room_name in Amity.living_spaces:
+				room_type = "Living Space"	
 			if room_name in Amity.convert_keys_to_list(Amity.room_allocations.keys()):
-				print(room_name.upper())
+				print(room_name.upper() + " -> " + room_type)
 				print("-" * 50)
 				people = Amity.room_allocations[room_name]
 				str_people = ", ".join(people)
-				print(str_people)
-				print()
+				print(str_people + "\n")
 			else:
-				return "Room has no allocations or does not exist!"
-
+				print("Room has no allocations or does not exist!")
 
 	@staticmethod
-	def save_state():
-		pass
+	def save_state(database_name=""):
+		if database_name:
+			create_database(database_name)
 
+		print(db_crud.save_fellows(Amity.fellows))
+		print(db_crud.save_staff(Amity.staff))
+		print(db_crud.save_offices(Amity.offices))
+		print(db_crud.save_livingspaces(Amity.living_spaces)) 
+		# import pdb; pdb.set_trace()
+		print(db_crud.save_allocations(Amity.room_allocations))
 
 	@staticmethod
 	def load_state():
-		pass
+		Amity.fellows = db_crud.get_all_fellows()
+		Amity.staff = db_crud.get_all_staff()
+		Amity.offices = db_crud.get_all_offices()
+		Amity.living_spaces = db_crud.get_all_livingspaces()
+		Amity.room_allocations  = db_crud.get_room_allocations()
+		
 
-
-
-def test_stuff():
-	# Random Testing Stuff
-	Amity.create_room("LS", "Oculus", "Valhalla")
-	# print(Amity.living_spaces)
-	Amity.create_room("OF", "Hogwarts")
-
-	Amity.add_person(first_name="Emma", last_name="Bale", person_type="Fellow", wants_accomodation="Y")
-	Amity.add_person(first_name="Lost", last_name="Frequencies", person_type="Staff", wants_accomodation="Y")
-	Amity.add_person(first_name="Leona", last_name="Lewis", person_type="Staff", wants_accomodation="Y")
-	Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Fellow", wants_accomodation="N")
-
-	print()
-	print("print_room".upper())
-	print("#" * 60)
-	Amity.print_room("Hogwarts", "Oculus", "Valhalla")
-	print("#" * 60)
-	print()
-
-	# print("print_allocations".upper())
-	# Amity.print_allocations("test.txt")
-	Amity.print_unallocated()
-	# print()
-	# print(type(Amity.room_allocations.keys()))
-
-test_stuff()
