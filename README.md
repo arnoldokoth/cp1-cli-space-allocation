@@ -1,4 +1,4 @@
-	# Amity
+# Amity
 
 ## Introduction
 > This project was developed as part of the fulfillment of Checkpoint 1 in the Python Learning Path. Amity is a command line application used to allocate office and room space. 
