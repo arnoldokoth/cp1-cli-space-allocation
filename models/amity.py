@@ -17,20 +17,19 @@ class Amity:
     room_allocations = {}
 
     @classmethod
-    def create_room(cls, room_type, *rooms_args):
+    def create_room(cls, room_type, rooms_args):
         """ Creates rooms of different types
 
 		Arguments:
 		room_type: the type of room; OF - Office, LS - Living Space
 		rooms_args: a tuple of room names; ('Oculus', 'Hogwarts')
 		"""
-        for room in rooms_args[0]:
+        for room in rooms_args:
             if room_type == "OF":
                 cls.offices.append(room)
                 current_room = Room(type="OF", name=room)
             elif room_type == "LS":
                 cls.living_spaces.append(room)
-                # import pdb; pdb.set_trace()
                 current_room = Room(type="LS", name=room)
             else:
                 return "Invalid Room Type"
@@ -151,7 +150,7 @@ class Amity:
 
     @classmethod
     def reallocate_person(cls, full_name, room_name):
-        """ Moves someone from one room to another
+        """ Moves a person from one room to another
 
 		Arguments:
 		full_name: full_name of person; fellow or staff
@@ -161,29 +160,31 @@ class Amity:
             if full_name in cls.fellows:
                 # current person is a fellow so he can be reallocated to both offices & living spaces
                 all_rooms = cls.offices + cls.living_spaces
-                if room_name in cls.room_allocations.keys():
-                    for room in cls.room_allocations.keys():
-                        if full_name in cls.room_allocations[room]:
-                            cls.room_allocations[room].remove(full_name)
-                    if cls.is_at_max_capacity(room_name):
-                        print("Room already full!")
-                    else:
-                        cls.room_allocations[room_name].append(full_name)
+                # if room_name in cls.room_allocations.keys():
+                for room in cls.room_allocations.keys():
+                    if full_name in cls.room_allocations[room]:
+                        cls.room_allocations[room].remove(full_name)
+                if cls.is_at_max_capacity(room_name):
+                    print("Room already full!")
                 else:
-                    cls.room_allocations[room_name] = [full_name]
+                	if room_name in cls.room_allocations.keys():
+                		cls.room_allocations[room_name].append(full_name)
+                	else:
+                		cls.room_allocations[room_name] = [full_name]
             elif full_name in cls.staff:
                 # this guy is staff thus can only be allocated to an office
                 all_rooms = cls.offices
-                if room_name in cls.room_allocations.keys():
-                    for room in cls.room_allocations.keys():
-                        if full_name in cls.room_allocations[room]:
-                            cls.room_allocations[room].remove(full_name)
-                    if cls.is_at_max_capacity(room_name):
-                        print("Room already full!")
-                    else:
-                        cls.room_allocations[room_name].append(full_name)
+                # if room_name in cls.room_allocations.keys():
+                for room in cls.room_allocations.keys():
+                    if full_name in cls.room_allocations[room]:
+                        cls.room_allocations[room].remove(full_name)
+                if cls.is_at_max_capacity(room_name):
+                    print("Room already full!")
                 else:
-                    cls.room_allocations[room_name] = [full_name]
+                	if room_name in cls.room_allocations.keys():
+                		cls.room_allocations[room_name].append(full_name)
+                	else:
+                		cls.room_allocations[room_name] = [full_name]
         else:
             print("Room {0} not created!".format(room_name))
 
@@ -314,10 +315,6 @@ class Amity:
 		Arguments:
 		database_name: database to be saved to
 		"""
-        if database_name:
-            create_database(database_name)
-        else:
-            create_database("")
 
         print(db_crud.save_fellows(cls.fellows))
         print(db_crud.save_staff(cls.staff))
