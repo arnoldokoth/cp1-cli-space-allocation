@@ -19,8 +19,7 @@ session = DBSession()
 def save_fellows(fellow_list=[]):
 	if len(fellow_list) > 0:
 		for fellow in fellow_list:
-			fellow_id = fellow_list.index(fellow) + 1
-			add_fellow = Person(person_id=fellow_id, full_name=fellow, person_type="Fellow")
+			add_fellow = Person(full_name=fellow, person_type="Fellow")
 			session.add(add_fellow)
 			# import pdb; pdb.set_trace()
 		try:
@@ -37,10 +36,8 @@ def save_fellows(fellow_list=[]):
 def save_staff(staff_list=[]):
 	if len(staff_list) > 0:
 		for staff in staff_list:
-			staff_id = staff_list.index(staff) + 1
 			add_staff = Person(full_name=staff, person_type="Staff")
 			session.add(add_staff)
-
 		try:
 			session.commit()
 		except Exception:
@@ -55,7 +52,6 @@ def save_staff(staff_list=[]):
 def save_offices(office_list=[]):
 	if len(office_list) > 0:
 		for office in office_list:
-			office_id = office_list.index(office) + 1
 			add_office = Room(room_name=office, room_type="Office")
 			session.add(add_office)
 
@@ -73,7 +69,6 @@ def save_offices(office_list=[]):
 def save_livingspaces(livingspace_list=[]):
 	if len(livingspace_list) > 0:
 		for livingspace in livingspace_list:
-			livingspace_id = livingspace_list.index(livingspace) + 1
 			add_livingspace = Room(room_name=livingspace, room_type="Living Space")
 			session.add(add_livingspace)
 		try:
@@ -146,8 +141,6 @@ def get_all_livingspaces():
 
 def get_room_allocations():
 	room_allocations = {}
-	rooms = []
-	people = []
 	room_rows = session.query(RoomAllocations).all()
 	for room in room_rows:
 		rooms.append(str(room.room_name))

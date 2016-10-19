@@ -160,7 +160,6 @@ class Amity:
             if full_name in cls.fellows:
                 # current person is a fellow so he can be reallocated to both offices & living spaces
                 all_rooms = cls.offices + cls.living_spaces
-                # if room_name in cls.room_allocations.keys():
                 for room in cls.room_allocations.keys():
                     if full_name in cls.room_allocations[room]:
                         cls.room_allocations[room].remove(full_name)
@@ -174,7 +173,6 @@ class Amity:
             elif full_name in cls.staff:
                 # this guy is staff thus can only be allocated to an office
                 all_rooms = cls.offices
-                # if room_name in cls.room_allocations.keys():
                 for room in cls.room_allocations.keys():
                     if full_name in cls.room_allocations[room]:
                         cls.room_allocations[room].remove(full_name)
