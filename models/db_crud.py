@@ -16,7 +16,7 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-def save_fellows(fellow_list=[]):
+def save_fellows(fellow_list):
 	if len(fellow_list) > 0:
 		for fellow in fellow_list:
 			add_fellow = Person(full_name=fellow, person_type="Fellow")
@@ -33,7 +33,7 @@ def save_fellows(fellow_list=[]):
 		return "no fellows in cache"
 
 
-def save_staff(staff_list=[]):
+def save_staff(staff_list):
 	if len(staff_list) > 0:
 		for staff in staff_list:
 			add_staff = Person(full_name=staff, person_type="Staff")
@@ -49,7 +49,7 @@ def save_staff(staff_list=[]):
 		return "no staff in cache"
 
 
-def save_offices(office_list=[]):
+def save_offices(office_list):
 	if len(office_list) > 0:
 		for office in office_list:
 			add_office = Room(room_name=office, room_type="Office")
@@ -66,7 +66,7 @@ def save_offices(office_list=[]):
 		return "no offices in cache"
 
 
-def save_livingspaces(livingspace_list=[]):
+def save_livingspaces(livingspace_list):
 	if len(livingspace_list) > 0:
 		for livingspace in livingspace_list:
 			add_livingspace = Room(room_name=livingspace, room_type="Living Space")
@@ -87,7 +87,7 @@ def delete_allocations():
 	session.commit()
 
 
-def save_allocations(room_allocations={}):
+def save_allocations(room_allocations):
 	delete_allocations()
 	if len(room_allocations.keys()) > 0:
 		for room_name in room_allocations.keys():
