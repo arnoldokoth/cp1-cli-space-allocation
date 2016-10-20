@@ -173,16 +173,19 @@ class Amity:
             elif full_name in cls.staff:
                 # this guy is staff thus can only be allocated to an office
                 all_rooms = cls.offices
-                for room in cls.room_allocations.keys():
-                    if full_name in cls.room_allocations[room]:
-                        cls.room_allocations[room].remove(full_name)
-                if cls.is_at_max_capacity(room_name):
-                    print("Room already full!")
+                if room_name in all_rooms:
+                	for room in cls.room_allocations.keys():
+	                    if full_name in cls.room_allocations[room]:
+	                        cls.room_allocations[room].remove(full_name)
+	                if cls.is_at_max_capacity(room_name):
+	                    print("Room already full!")
+	                else:
+	                	if room_name in cls.room_allocations.keys():
+	                		cls.room_allocations[room_name].append(full_name)
+	                	else:
+	                		cls.room_allocations[room_name] = [full_name]
                 else:
-                	if room_name in cls.room_allocations.keys():
-                		cls.room_allocations[room_name].append(full_name)
-                	else:
-                		cls.room_allocations[room_name] = [full_name]
+	                print("cannot reallocate staff to a living space")
         else:
             print("Room {0} not created!".format(room_name))
 
