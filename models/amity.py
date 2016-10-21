@@ -1,8 +1,7 @@
 import db_crud
-import pdb
 import random
 
-from database_structure import create_database
+from database_structure import create_database, Base
 from models.staff import Staff
 from models.fellow import Fellow
 from models.room import Room
@@ -20,10 +19,10 @@ class Amity:
     def create_room(cls, room_type, rooms_args):
         """ Creates rooms of different types
 
-		Arguments:
-		room_type: the type of room; OF - Office, LS - Living Space
-		rooms_args: a tuple of room names; ('Oculus', 'Hogwarts')
-		"""
+        Arguments:
+        room_type: the type of room; OF - Office, LS - Living Space
+        rooms_args: a tuple of room names; ('Oculus', 'Hogwarts')
+        """
         for room in rooms_args:
             if room_type == "OF":
                 cls.offices.append(room)
@@ -38,9 +37,9 @@ class Amity:
     def add_person(cls, **kwargs):
         """ Creates a person with a given classification
 
-		Arguments:
-		kwargs: contains the person to be created attributes
-		"""
+        Arguments:
+        kwargs: contains the person to be created attributes
+        """
         first_name = kwargs.get('first_name', None)
         last_name = kwargs.get('last_name', None)
         person_type = kwargs.get('person_type', None)  # Person Type: FELLOW, STAFF
@@ -135,27 +134,21 @@ class Amity:
             # Check if the room already has some allocations
             if room_name in cls.room_allocations.keys():
                 current_capacity = len(cls.room_allocations[room_name])
-                if current_capacity == max_capacity:
-                    return True
-                else:
-                    return False
+                return bool(current_capacity == max_capacity)
         elif room_name in cls.living_spaces:
             max_capacity = 4
             if room_name in cls.room_allocations.keys():
                 current_capacity = len(cls.room_allocations[room_name])
-                if current_capacity == max_capacity:
-                    return True
-                else:
-                    return False
+                return bool(current_capacity == max_capacity)
 
     @classmethod
     def reallocate_person(cls, full_name, room_name):
         """ Moves a person from one room to another
 
-		Arguments:
-		full_name: full_name of person; fellow or staff
-		room_name: room person is to be moved to
-		"""
+        Arguments:
+        full_name: full_name of person; fellow or staff
+        room_name: room person is to be moved to
+        """
         if room_name in cls.offices + cls.living_spaces:
             if full_name in cls.fellows:
                 # current person is a fellow so he can be reallocated to both offices & living spaces
@@ -166,26 +159,26 @@ class Amity:
                 if cls.is_at_max_capacity(room_name):
                     print("Room already full!")
                 else:
-                	if room_name in cls.room_allocations.keys():
-                		cls.room_allocations[room_name].append(full_name)
-                	else:
-                		cls.room_allocations[room_name] = [full_name]
+                    if room_name in cls.room_allocations.keys():
+                        cls.room_allocations[room_name].append(full_name)
+                    else:
+                        cls.room_allocations[room_name] = [full_name]
             elif full_name in cls.staff:
                 # this guy is staff thus can only be allocated to an office
                 all_rooms = cls.offices
                 if room_name in all_rooms:
-                	for room in cls.room_allocations.keys():
-	                    if full_name in cls.room_allocations[room]:
-	                        cls.room_allocations[room].remove(full_name)
-	                if cls.is_at_max_capacity(room_name):
-	                    print("Room already full!")
-	                else:
-	                	if room_name in cls.room_allocations.keys():
-	                		cls.room_allocations[room_name].append(full_name)
-	                	else:
-	                		cls.room_allocations[room_name] = [full_name]
+                    for room in cls.room_allocations.keys():
+                        if full_name in cls.room_allocations[room]:
+                            cls.room_allocations[room].remove(full_name)
+                    if cls.is_at_max_capacity(room_name):
+                        print("Room already full!")
+                    else:
+                        if room_name in cls.room_allocations.keys():
+                            cls.room_allocations[room_name].append(full_name)
+                        else:
+                            cls.room_allocations[room_name] = [full_name]
                 else:
-	                print("cannot reallocate staff to a living space")
+                    print("cannot reallocate staff to a living space")
         else:
             print("Room {0} not created!".format(room_name))
 
@@ -193,9 +186,9 @@ class Amity:
     def load_people(cls, filename):
         """ Loads people from the specified file
 
-		Arguments:
-		filename: name of file containing data 
-		"""
+        Arguments:
+        filename: name of file containing data
+        """
         if filename:
             with open(filename, "r") as file:
                 lines = file.readlines()
@@ -207,14 +200,14 @@ class Amity:
                         person_type = person_details[2]
                         wants_accomodation = "N"
                         cls.add_person(first_name=first_name, last_name=last_name, person_type=person_type,
-                                         wants_accomodation=wants_accomodation)
+                                       wants_accomodation=wants_accomodation)
                     elif len(person_details) == 4:
                         first_name = person_details[0]
                         last_name = person_details[1]
                         person_type = person_details[2]
                         wants_accomodation = person_details[3]
                         cls.add_person(first_name=first_name, last_name=last_name, person_type=person_type,
-                                         wants_accomodation=wants_accomodation)
+                                       wants_accomodation=wants_accomodation)
                     else:
                         print("could not process provided data!")
         else:
@@ -224,13 +217,13 @@ class Amity:
     @staticmethod
     def convert_keys_to_list(allocation_keys):
         """ Converts a dictionary's keys from type dict_keys to type list
-		
-		Arguments:
-		allocation_keys: room_allocation keys
 
-		Return:
-		output_list: list containing the keys
-		"""
+        Arguments:
+        allocation_keys: room_allocation keys
+
+        Return:
+        output_list: list containing the keys
+        """
         output_list = []
         for item in allocation_keys:
             output_list.append(item)
@@ -241,9 +234,9 @@ class Amity:
     def print_allocations(cls, filename=""):
         """ Display the currently created rooms and people in them
 
-		Arguments:
-		filename: if a filename is provided then this function prints to the file
-		"""
+        Arguments:
+        filename: if a filename is provided then this function prints to the file
+        """
         if filename:
             print("\nwriting to file...\n")
             with open(filename, 'w') as file:
@@ -264,9 +257,9 @@ class Amity:
     def print_unallocated(cls, filename=""):
         """ Display the people currently unallocated
 
-		Arguments:
-		filename: if a filename is provided then this function prints to the file
-		"""
+        Arguments:
+        filename: if a filename is provided then this function prints to the file
+        """
         all_people = cls.fellows + cls.staff
         allocated_people = []
         for room in cls.room_allocations.keys():
@@ -291,9 +284,9 @@ class Amity:
     def print_room(cls, *args):
         """ Prints the people currently allocated to a room
 
-		Arguments:
-		args: tuple with room names
-		"""
+        Arguments:
+        args: tuple with room names
+        """
         for room_name in args:
             room_type = ""
             if room_name in cls.offices:
@@ -311,30 +304,35 @@ class Amity:
 
     @classmethod
     def save_state(cls, database_name):
-        """ Saves the current state of the application to the database
+        engine = None
+        save_db = None
+        if database_name:
+            engine = create_database(database_name)
+            save_db = db_crud.Database(engine)
+            Base.metadata.create_all(engine)
 
-		Arguments:
-		database_name: database to be saved to
-		"""
-
-        print(db_crud.save_fellows(cls.fellows))
-        print(db_crud.save_staff(cls.staff))
-        print(db_crud.save_offices(cls.offices))
-        print(db_crud.save_livingspaces(cls.living_spaces))
-        print(db_crud.save_allocations(cls.room_allocations))
+        print(save_db.save_fellows(cls.fellows))
+        print(save_db.save_staff(cls.staff))
+        print(save_db.save_offices(cls.offices))
+        print(save_db.save_livingspaces(cls.living_spaces))
+        print(save_db.save_allocations(cls.room_allocations))
 
     @classmethod
     def load_state(cls, database_name):
         """ Loads the previously saved state of the application
 
-		Arguments:
-		database_name: database to load data from
-		"""
+        Arguments:
+        database_name: database to load data from
+        """
+        engine = None
+        load_db = None
         if database_name:
             print("reading data from {0}".format(database_name))
-            create_database(database_name)
-            cls.fellows = db_crud.get_all_fellows()
-            cls.staff = db_crud.get_all_staff()
-            cls.offices = db_crud.get_all_offices()
-            cls.living_spaces = db_crud.get_all_livingspaces()
-            cls.room_allocations = db_crud.get_room_allocations()
+            engine = create_database(database_name)
+            load_db = db_crud.Database(engine)
+            Base.metadata.create_all(engine)
+            cls.fellows = load_db.get_all_fellows()
+            cls.staff = load_db.get_all_staff()
+            cls.offices = load_db.get_all_offices()
+            cls.living_spaces = load_db.get_all_livingspaces()
+            cls.room_allocations = load_db.get_room_allocations()
