@@ -133,13 +133,14 @@ class Database:
         for room in room_rows:
             rooms.append(str(room.room_name))
 
+        people_rows = None
         for room in rooms:
             people_rows = self.session.query(RoomAllocations).filter_by(room_name=room).all()
 
-            for person in people_rows:
-                if str(person.room_name) in room_allocations.keys():
-                    room_allocations[str(person.room_name)].append(str(person.full_name))
-                else:
-                    room_allocations[str(person.room_name)] = [str(person.full_name)]
+        for person in people_rows:
+            if str(person.room_name) in room_allocations.keys():
+                room_allocations[str(person.room_name)].append(str(person.full_name))
+            else:
+                room_allocations[str(person.room_name)] = [str(person.full_name)]
 
         return room_allocations
