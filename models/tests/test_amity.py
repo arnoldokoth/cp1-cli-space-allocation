@@ -63,16 +63,11 @@ class TestAmity(unittest.TestCase):
         Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Fellow", wants_accomodation="N")
         self.assertIn("Hogwarts", Amity.print_unallocated(self.unallocated_rooms_file))
 
-    def test_print_room(self):
-        self.assertIn("Arnold Okoth", Amity.print_room("Oculus"))
-
-    @unittest.skip("work in progress")
-    def test_save_state(self):
-        pass
-
-    @unittest.skip("work in progress")
-    def test_load_state(self):
-        pass
+    def test_room_allocation(self):
+        Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Staff")
+        Amity.create_room("OF", "Oculus")
+        Amity.reallocate_person("Arnold Okoth", "Oculus")
+        self.assertIn("Arnold Okoth", Amity.room_allocations["Oculus"])
 
 
 if __name__ == '__main__':
