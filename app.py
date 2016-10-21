@@ -98,8 +98,10 @@ class AmityCLI(cmd.Cmd):
     def do_load_people(self, arg):
         """Usage: load_people <filename>"""
         filename = arg["<filename>"]
-
-        Amity.load_people(filename)
+        if os.path.exists(filename):
+            Amity.load_people(filename)
+        else:
+            print("File Not Found")
 
     @docopt_cmd
     def do_print_allocations(self, arg):
