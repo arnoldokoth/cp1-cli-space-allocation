@@ -1,0 +1,30 @@
+Amity 
+create_room <room_name>
+add_person <person_name> <FELLOW|STAFF> [wants_accomodation]
+reallocate_person <person_idenifier>
+load_people
+print_allocations [-o=filename]
+print_unallocated [-o=filename]
+print_room <room_name>
+save_state [--db=sqlite_database]
+load_state <sqlite_database>
+
+Modules/Application Folder Structure
+models
+	- tests
+	- __init__.py
+	- amity.py
+	- database_structure.py
+	- db_crud.py
+	- fellow.py
+	- livingspace.py
+	- office.py
+	- person.py
+	- room.py
+	- staff.py
+.coverage
+.gitignore
+README.md
+__init__.py
+app.py
+requirements.txt
