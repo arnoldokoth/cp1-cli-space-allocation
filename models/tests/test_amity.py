@@ -1,5 +1,5 @@
-import unittest
 import os
+import unittest
 
 from models.amity import Amity
 
@@ -36,15 +36,18 @@ class TestAmity(unittest.TestCase):
         self.assertIn("Narnia", Amity.living_spaces)
 
     def test_add_fellow(self):
-        Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Fellow", wants_accomodation="Y")
+        Amity.add_person(first_name="Arnold", last_name="Okoth",
+                         person_type="Fellow", swants_accomodation="Y")
         self.assertIn("Arnold Okoth", Amity.fellows)
 
     def test_add_staff(self):
-        Amity.add_person(first_name="Test", last_name="Staff", person_type="Staff", wants_accomodation="N")
+        Amity.add_person(first_name="Test", last_name="Staff",
+                         person_type="Staff", wants_accomodation="N")
         self.assertIn("Test Staff", Amity.staff)
 
     def test_reallocate_person(self):
-        Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Staff")
+        Amity.add_person(first_name="Arnold", last_name="Okoth",
+                         person_type="Staff")
         Amity.create_room("OF", "Oculus")
         Amity.reallocate_person("Arnold Okoth", "Oculus")
         self.assertIn("Arnold Okoth", Amity.room_allocations["Oculus"])
@@ -56,15 +59,20 @@ class TestAmity(unittest.TestCase):
         self.assertIn("OLUWAFEMI SULE", Amity.fellows)
 
     def test_print_allocations(self):
-        Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Fellow", wants_accomodation="Y")
-        self.assertIn("Arnold Okoth Oculus", Amity.print_allocations(self.allocations_file))
+        Amity.add_person(first_name="Arnold", last_name="Okoth",
+                         person_type="Fellow", wants_accomodation="Y")
+        self.assertIn("Arnold Okoth Oculus",
+                      Amity.print_allocations(self.allocations_file))
 
     def test_print_unallocated_to_file(self):
-        Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Fellow", wants_accomodation="N")
-        self.assertIn("Hogwarts", Amity.print_unallocated(self.unallocated_rooms_file))
+        Amity.add_person(first_name="Arnold", last_name="Okoth",
+                         person_type="Fellow", wants_accomodation="N")
+        self.assertIn("Hogwarts",
+                      Amity.print_unallocated(self.unallocated_rooms_file))
 
     def test_room_allocation(self):
-        Amity.add_person(first_name="Arnold", last_name="Okoth", person_type="Staff")
+        Amity.add_person(first_name="Arnold", last_name="Okoth",
+                         person_type="Staff")
         Amity.create_room("OF", "Oculus")
         Amity.reallocate_person("Arnold Okoth", "Oculus")
         self.assertIn("Arnold Okoth", Amity.room_allocations["Oculus"])

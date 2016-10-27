@@ -6,7 +6,7 @@ from models.person import Person
 class TestFellow(unittest.TestCase):
 
     def setUp(self):
-        self.fellow_one = Fellow("Arnold", "Okoth", "Male")
+        self.fellow_one = Fellow("Arnold", "Okoth")
 
     @unittest.skip("work in progress")
     def test_is_subclass(self):
