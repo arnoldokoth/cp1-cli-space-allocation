@@ -85,13 +85,14 @@ class AmityCLI(cmd.Cmd):
 
     @docopt_cmd
     def do_reallocate_person(self, arg):
-        """Usage: reallocate_person <first_name> <last_name> <new_room_name>"""
+        """Usage: reallocate_person <first_name> <last_name> <reallocation_type> <new_room_name>"""
         first_name = arg["<first_name>"]
         last_name = arg["<last_name>"]
+        reallocation_type = arg["<reallocation_type>"]
         full_name = first_name.strip() + " " + last_name.strip()
         new_room_name = arg["<new_room_name>"]
 
-        Amity.reallocate_person(full_name, new_room_name.strip())
+        Amity.reallocate_person_2(reallocation_type, full_name, new_room_name.strip())
 
     @docopt_cmd
     def do_load_people(self, arg):

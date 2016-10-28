@@ -28,9 +28,11 @@ class Amity:
             if room_type == "OF":
                 cls.offices.append(room)
                 current_room = Room(type="OF", name=room)
+                print("Created {0} of type {1}".format(room, "Office"))
             elif room_type == "LS":
                 cls.living_spaces.append(room)
                 current_room = Room(type="LS", name=room)
+                print("Created {0} of type {1}".format(room, "Living Space"))
             else:
                 return "Invalid Room Type"
 
@@ -151,61 +153,33 @@ class Amity:
         """ Moves a person from one room to another
 
         Arguments:
-        reallocation_type: type of reallocation -> OF or LS
         full_name: person to be moved
         room_name: room person is to be moved to
         """
-        # Reallocation Type: OF, LS
-        if reallocation_type == "OF":
-            # Moving from one office to another
-            pass
-        elif reallocation_type == "LS":
-            # Moving from one living space to another
-            pass
-        else:
-            print("Invalid Reallocation Type")
-
-    @classmethod
-    def reallocate_person(cls, full_name, room_name):
-        """ Moves a person from one room to another
-
-        Arguments:
-        full_name: full_name of person; fellow or staff
-        room_name: room person is to be moved to
-        """
-        if room_name in cls.offices + cls.living_spaces:
-            if full_name in cls.fellows:
-                # current person is a fellow so he can be reallocated to
-                # both offices & living spaces
-                all_rooms = cls.offices + cls.living_spaces
-                for room in cls.room_allocations.keys():
-                    if full_name in cls.room_allocations[room]:
-                        cls.room_allocations[room].remove(full_name)
-                if cls.is_at_max_capacity(room_name):
-                    print("Room already full!")
-                else:
-                    if room_name in cls.room_allocations.keys():
-                        cls.room_allocations[room_name].append(full_name)
-                    else:
-                        cls.room_allocations[room_name] = [full_name]
-            elif full_name in cls.staff:
-                # this guy is staff thus can only be allocated to an office
-                all_rooms = cls.offices
-                if room_name in all_rooms:
-                    for room in cls.room_allocations.keys():
+        if not cls.is_at_max_capacity(room_name):
+            if reallocation_type == "OF":
+                if room_name in cls.offices:
+                    for room in cls.offices:
                         if full_name in cls.room_allocations[room]:
                             cls.room_allocations[room].remove(full_name)
-                    if cls.is_at_max_capacity(room_name):
-                        print("Room already full!")
-                    else:
-                        if room_name in cls.room_allocations.keys():
-                            cls.room_allocations[room_name].append(full_name)
-                        else:
-                            cls.room_allocations[room_name] = [full_name]
+                    cls.room_allocations[room_name].append(full_name)
+                    print("Reallocated {0} to {1}".format(full_name, room_name))
                 else:
-                    print("cannot reallocate staff to a living space")
+                    print("Room Does Not Exist!")
+            elif reallocation_type == "LS":
+                if room_name in cls.living_spaces:
+                    for room in cls.living_spaces:
+                        if full_name in cls.room_allocations[room]:
+                            cls.room_allocations[room].remove(full_name)
+                    cls.room_allocations[room_name].append(full_name)
+                    print("Reallocated {0} to {1}".format(full_name, room_name))
+                else:
+                    print("Room Does Not Exist!")
+            else:
+                print("Invalid Reallocation Flag")
         else:
-            print("Room {0} not created!".format(room_name))
+            print("Room Already Full!")
+        #####################################
 
     @classmethod
     def load_people(cls, filename):
