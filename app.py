@@ -1,8 +1,8 @@
 """
 Commands:
-    add_person <first_name> <last_name> <FELLOW|STAFF> [wants_accomodation=N]
+    add_person <first_name> <last_name> <designation> [--wants_accomodation=N]
     create_room <room_type> <room_name>...
-    reallocate_person <full_name> <new_room_name>
+    reallocate_person <first_name> <last_name> <reallocation_type> <new_room_name>
     load_people <filename>
     print_allocations [--o=filename]
     print_unallocated [--o=filename]
