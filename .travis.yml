@@ -7,4 +7,4 @@ install:
 env:
   - DB=sqlite
 # command to run tests
-script: nosetests --with-coverage
+script: nosetests --with-coverage --cover-package=models/

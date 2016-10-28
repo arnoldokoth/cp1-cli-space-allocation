@@ -1,6 +1,4 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ca3785390d44b64a68e2a866ae9c9ad)](https://www.codacy.com/app/arnold-okoth/cp1_amity?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andela-aokoth/cp1_amity&amp;utm_campaign=Badge_Grade)
-
-[![Build Status](https://travis-ci.org/andela-aokoth/cp1_amity.svg?branch=master)](https://travis-ci.org/andela-aokoth/cp1_amity)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ca3785390d44b64a68e2a866ae9c9ad)](https://www.codacy.com/app/arnold-okoth/cp1_amity?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andela-aokoth/cp1_amity&amp;utm_campaign=Badge_Grade) [![Build Status](https://travis-ci.org/andela-aokoth/cp1_amity.svg?branch=master)](https://travis-ci.org/andela-aokoth/cp1_amity)
 # Amity
 
 ## Introduction
