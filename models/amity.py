@@ -14,6 +14,7 @@ class Amity:
     fellows = []
     staff = []
     room_allocations = {}
+    max_capacity = {"office":6, "livingspace":4}
 
     @classmethod
     def create_room(cls, room_type, rooms_args):
@@ -24,6 +25,7 @@ class Amity:
         rooms_args: a tuple of room names; ('Oculus', 'Hogwarts')
         """
         for room in rooms_args:
+            # import pdb; pdb.set_trace()
             cls.room_allocations[room] = []
             if room_type == "OF":
                 cls.offices.append(room)
@@ -133,18 +135,17 @@ class Amity:
     def is_at_max_capacity(cls, room_name):
         """ Returns a boolean """
         if room_name in cls.offices:
-            max_capacity = 6
             # Check if the room already has some allocations
             if room_name in cls.room_allocations.keys():
                 current_capacity = len(cls.room_allocations[room_name])
-                return current_capacity == max_capacity
+                return current_capacity == cls.max_capacity["office"]
             else:
                 return False
         elif room_name in cls.living_spaces:
             max_capacity = 4
             if room_name in cls.room_allocations.keys():
                 current_capacity = len(cls.room_allocations[room_name])
-                return current_capacity == max_capacity
+                return current_capacity == cls.max_capacity["livingspace"]
             else:
                 return False
 
