@@ -1,0 +1,17 @@
+# We Would Like Our Task To Run On A Linux Container
+platform: linux
+
+# Declares The Image To Use For The Tasks Container
+image_resource:
+  type: docker-image
+  source:
+    repository: python
+    tag: 2.7.13
+
+# Defines The Things We Need In Order For Our Tasks To Run
+inputs:
+- name: cp1_amity
+
+# Describes How Concourse Should Run The Tasks
+run:
+  path: ./cp1_amity/ci/test.sh
