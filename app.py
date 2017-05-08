@@ -1,8 +1,8 @@
 """
 Commands:
-    add_person <first_name> <last_name> <FELLOW|STAFF> [wants_accomodation=N]
+    add_person <first_name> <last_name> <designation> [--wants_accomodation=N]
     create_room <room_type> <room_name>...
-    reallocate_person <full_name> <new_room_name>
+    reallocate_person <first_name> <last_name> <reallocation_type> <new_room_name>
     load_people <filename>
     print_allocations [--o=filename]
     print_unallocated [--o=filename]
@@ -55,8 +55,8 @@ def introduction():
 
 
 def save_state_on_interrupt():
-    print("saving state...")
-    Amity.save_state("default.db")
+    print("Application Interrupted! Saving State...")
+    Amity.save_state()
 
 
 class AmityCLI(cmd.Cmd):
@@ -68,12 +68,11 @@ class AmityCLI(cmd.Cmd):
         first_name = arg["<first_name>"]
         last_name = arg["<last_name>"]
         designation = arg["<designation>"]
-        if arg["--wants_accomodation"] is None:
-            wants_accomodation = "N"
-        else:
-            wants_accomodation = arg["--wants_accomodation"]
+        wants_accomodation = arg["--wants_accomodation"] or "N"
 
-        Amity.add_person(first_name=first_name.strip(), last_name=last_name.strip(), person_type=designation.strip(),
+        Amity.add_person(first_name=first_name.strip(),
+                         last_name=last_name.strip(),
+                         person_type=designation.strip(),
                          wants_accomodation=wants_accomodation.strip())
 
     @docopt_cmd
@@ -86,13 +85,14 @@ class AmityCLI(cmd.Cmd):
 
     @docopt_cmd
     def do_reallocate_person(self, arg):
-        """Usage: reallocate_person <first_name> <last_name> <new_room_name>"""
+        """Usage: reallocate_person <first_name> <last_name> <reallocation_type> <new_room_name>"""
         first_name = arg["<first_name>"]
         last_name = arg["<last_name>"]
+        reallocation_type = arg["<reallocation_type>"]
         full_name = first_name.strip() + " " + last_name.strip()
         new_room_name = arg["<new_room_name>"]
 
-        Amity.reallocate_person(full_name, new_room_name.strip())
+        Amity.reallocate_person_2(reallocation_type, full_name, new_room_name.strip())
 
     @docopt_cmd
     def do_load_people(self, arg):
@@ -133,11 +133,8 @@ class AmityCLI(cmd.Cmd):
     @docopt_cmd
     def do_save_state(self, arg):
         """Usage: save_state [--db=sqlite_database]"""
-        database_name = arg["--db"]
-        if database_name:
-            Amity.save_state(database_name)
-        else:
-            Amity.save_state("default.db")
+        database_name = arg["--db"] or "default.db"
+        Amity.save_state(database_name)
 
     @docopt_cmd
     def do_load_state(self, arg):
@@ -159,4 +156,5 @@ if __name__ == "__main__":
     try:
         AmityCLI().cmdloop()
     except KeyboardInterrupt:
-        save_state_on_interrupt()
+        # save_state_on_interrupt()
+        print("Goodbye!")

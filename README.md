@@ -1,9 +1,8 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ca3785390d44b64a68e2a866ae9c9ad)](https://www.codacy.com/app/arnold-okoth/cp1_amity?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andela-aokoth/cp1_amity&amp;utm_campaign=Badge_Grade)
-
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ca3785390d44b64a68e2a866ae9c9ad)](https://www.codacy.com/app/arnold-okoth/cp1_amity?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andela-aokoth/cp1_amity&amp;utm_campaign=Badge_Grade) [![Build Status](https://travis-ci.org/andela-aokoth/cp1_amity.svg?branch=master)](https://travis-ci.org/andela-aokoth/cp1_amity)
 # Amity
 
 ## Introduction
-> This project was developed as part of the fulfillment of Checkpoint 1 in the Python Learning Path. Amity is a command line application used to allocate office and room space. 
+> This project was developed as part of the fulfillment of Checkpoint 1 in the Python Learning Path. Amity is a command line application used to allocate office and room space.
 
 ## Usage Commands
 1. `create_room <room_name>...` - Creates a room in Amity. This command can create as many rooms as possible by specifying multiple room names
@@ -18,7 +17,7 @@
 
 ## Installation & Setup
 1. Download & Install Python
- 	* Head over to the [Python Downloads](https://www.python.org/downloads/) Site and download a version compatible with your operating system 
+ 	* Head over to the [Python Downloads](https://www.python.org/downloads/) Site and download a version compatible with your operating system
  	* To confirm that you have successfully installed Python:
 		* Open the Command Propmpt on Windows or Terminal on Mac/Linux
 		* Type python

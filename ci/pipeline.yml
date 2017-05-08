@@ -1,0 +1,14 @@
+resources:
+- name: cp1_amity
+  type: git
+  source:
+    uri: https://github.com/andela-aokoth/cp1_amity
+    branch: develop
+  
+jobs:
+- name: test-app
+  plan:
+  - get: cp1_amity
+    trigger: true
+  - task: tests
+    file: cp1_amity/build.yml

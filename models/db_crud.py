@@ -50,7 +50,7 @@ class Database:
 
             try:
                 self.session.commit()
-            except Exception as e:
+            except Exception:
                 self.session.rollback()
                 return "error occured or data already exists"
 
@@ -61,11 +61,12 @@ class Database:
     def save_livingspaces(self, livingspace_list):
         if len(livingspace_list) > 0:
             for livingspace in livingspace_list:
-                add_livingspace = Room(room_name=livingspace, room_type="Living Space")
+                add_livingspace = Room(room_name=livingspace,
+                                       room_type="Living Space")
                 self.session.add(add_livingspace)
             try:
                 self.session.commit()
-            except Exception as e:
+            except Exception:
                 self.session.rollback()
                 return "error occured or data already exists"
 
@@ -82,7 +83,8 @@ class Database:
         if len(room_allocations.keys()) > 0:
             for room_name in room_allocations.keys():
                 for person in room_allocations[room_name]:
-                    add_allocation = RoomAllocations(full_name=person, room_name=room_name)
+                    add_allocation = RoomAllocations(full_name=person,
+                                                     room_name=room_name)
                     self.session.add(add_allocation)
             try:
                 self.session.commit()
@@ -96,7 +98,8 @@ class Database:
 
     def get_all_fellows(self):
         fellows = []
-        fellow_rows = self.session.query(Person).filter_by(person_type="Fellow").all()
+        fellow_rows = self.session.query(Person).filter_by(
+                                                 person_type="Fellow").all()
         for fellow_row in fellow_rows:
             fellows.append(str(fellow_row.full_name))
 
@@ -104,7 +107,8 @@ class Database:
 
     def get_all_staff(self):
         staff = []
-        staff_rows = self.session.query(Person).filter_by(person_type="Staff").all()
+        staff_rows = self.session.query(Person).filter_by(
+                                                person_type="Staff").all()
         for staff_row in staff_rows:
             staff.append(str(staff_row.full_name))
 
@@ -112,7 +116,8 @@ class Database:
 
     def get_all_offices(self):
         offices = []
-        office_rows = self.session.query(Room).filter_by(room_type="Office").all()
+        office_rows = self.session.query(Room).filter_by(
+                                               room_type="Office").all()
         for office_row in office_rows:
             offices.append(str(office_row.room_name))
 
@@ -120,7 +125,8 @@ class Database:
 
     def get_all_livingspaces(self):
         livingspaces = []
-        livingspace_rows = self.session.query(Room).filter_by(room_type="Living Space").all()
+        livingspace_rows = self.session.query(Room).filter_by(
+                                                room_type="Living Space").all()
         for livingspace_row in livingspace_rows:
             livingspaces.append(str(livingspace_row.room_name))
 
@@ -131,16 +137,19 @@ class Database:
         rooms = []
         room_rows = self.session.query(RoomAllocations).all()
         for room in room_rows:
-            rooms.append(str(room.room_name))
+            if room.room_name not in rooms:
+                rooms.append(str(room.room_name))
 
-        people_rows = None
+        people_rows = []
         for room in rooms:
-            people_rows = self.session.query(RoomAllocations).filter_by(room_name=room).all()
-
+            people_rows = people_rows + self.session.query(
+                RoomAllocations).filter_by(room_name=room).all()
         for person in people_rows:
             if str(person.room_name) in room_allocations.keys():
-                room_allocations[str(person.room_name)].append(str(person.full_name))
+                room_allocations[str(person.room_name)].append(str(
+                                                             person.full_name))
             else:
-                room_allocations[str(person.room_name)] = [str(person.full_name)]
+                room_allocations[str(person.room_name)] = [str(
+                                                          person.full_name)]
 
         return room_allocations
